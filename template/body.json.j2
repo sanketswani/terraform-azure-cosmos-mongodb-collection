@@ -11,9 +11,11 @@
     },
     "resource": {
       "id": "{{ name }}",
+      {% if shard_key != "" %}
       "shardKey": {
         "{{ shard_key }}": "Hashed"
       },
+      {% endif %}
       "indexes": [
         {
           "key": {
