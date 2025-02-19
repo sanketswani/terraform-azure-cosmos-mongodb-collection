@@ -1,0 +1,49 @@
+{
+  "properties": {
+    "options": {
+      {% if scaling_type == "autoscale" %}
+      "autoscaleSettings": {
+        "maxThroughput": {{ throughput }}
+      }
+      {% else %}
+      "throughput": {{ throughput }}
+      {% endif %}
+    },
+    "resource": {
+      "id": "{{ name }}",
+      "shardKey": {
+        "{{ shard_key }}": "Hashed"
+      },
+      "indexes": [
+        {
+          "key": {
+            "keys": ["_id"]
+          },
+          "options": {
+            "unique": true
+          }
+        }{% if indexes is defined and indexes|length > 0 %},{% endif %}
+        {% for item in indexes %}
+        {
+          "key": {
+            "keys": [
+              {% for key in item.keys %}
+              "{{ key }}"{{ "," if not loop.last }}
+              {% endfor %}
+            ]
+          },
+          "options": {
+            {% if item.ttl %}
+            "expireAfterSeconds": {{ item.ttl }}{% if item.is_unique %},{% endif %}
+            {% endif %}
+            {% if item.is_unique %}
+            "unique": {{ item.is_unique|lower }}
+            {% endif %}
+          }
+        }
+        {{ "," if not loop.last }}
+        {% endfor %}
+      ]
+    }
+  }
+}
