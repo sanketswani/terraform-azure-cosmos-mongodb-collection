@@ -56,7 +56,6 @@ data "jinja_template" "body" {
         name          = var.name
         throughput    = var.throughput
         shard_key     = var.shard_key
-        is_serverless = local.is_serverless
         indexes       = var.indexes
       }
     )
