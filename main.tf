@@ -76,5 +76,5 @@ resource "azapi_resource" "mongoCosmosCollection" {
   tags = {
     "createdBy" = "terraform"
   }
-  body = data.jinja_template.body.result
+  body = jsondecode(data.jinja_template.body.result)
 }
